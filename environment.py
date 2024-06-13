@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
@@ -47,22 +48,43 @@ class Environment:
         plt.show()
 
     def _plot_cube(self, ax, x, y, z, dx, dy, dz):
-        """
-        Plots a cube at the specified position with the given size.
+            """
+            Plots a cube at the specified position with the given size.
 
-        Parameters:
-        ax (Axes3D): The 3D axis to plot on.
-        x, y, z (float): The position of the cube.
-        dx, dy, dz (float): The size of the cube.
-        """
-        xx = [x, x, x+dx, x+dx, x]
-        yy = [y, y+dy, y+dy, y, y]
-        kwargs = {'alpha': 0.5, 'color': 'blue'}
+            Parameters:
+            ax (Axes3D): The 3D axis to plot on.
+            x, y, z (float): The position of the cube.
+            dx, dy, dz (float): The size of the cube.
+            """
+            # Generate a random translucent color
+            color = np.random.rand(4)
+            color[3] = 0.5  # Set alpha to 0.5 for translucency
 
-        ax.plot3D(xx, yy, [z]*5, **kwargs)
-        ax.plot3D(xx, yy, [z+dz]*5, **kwargs)
-        for i in range(5):
-            ax.plot3D([xx[i], xx[i]], [yy[i], yy[i]], [z, z+dz], **kwargs)
+            # Define the vertices of the cube
+            vertices = [
+                [x, y, z],
+                [x+dx, y, z],
+                [x+dx, y+dy, z],
+                [x, y+dy, z],
+                [x, y, z+dz],
+                [x+dx, y, z+dz],
+                [x+dx, y+dy, z+dz],
+                [x, y+dy, z+dz]
+            ]
+
+            # Define the 6 faces of the cube
+            faces = [
+                [vertices[j] for j in [0, 1, 5, 4]],
+                [vertices[j] for j in [7, 6, 2, 3]],
+                [vertices[j] for j in [0, 3, 7, 4]],
+                [vertices[j] for j in [1, 2, 6, 5]],
+                [vertices[j] for j in [0, 1, 2, 3]],
+                [vertices[j] for j in [4, 5, 6, 7]]
+            ]
+
+            # Create a Poly3DCollection object for the cube
+            poly3d = Poly3DCollection(faces, facecolors=color, linewidths=1, edgecolors='r')
+            ax.add_collection3d(poly3d)
 
 
 if __name__ == "__main__":
