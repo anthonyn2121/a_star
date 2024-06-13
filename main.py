@@ -1,4 +1,5 @@
 from heapq import heapify, heappop, heappush
+import matplotlib.pyplot as plt
 import numpy as np
 from environment import Environment
 from occupancy_map import OccupancyMap
@@ -86,7 +87,18 @@ if __name__ == "__main__":
     env = Environment(world)
 
     start = (4, 2, 0)
-    goal = (8, 2, 0)
+    goal = (9, 8, 8)
 
-    waypoints = graph_search(env, start, goal, margin=1.0)
-    print(waypoints)
+    waypoints = graph_search(env, start, goal, margin=0.5, resolution=0.5)
+
+    ax = env.get_plot()
+    
+    waypoints = [start] + waypoints + [goal]
+    xs, ys, zs = zip(*waypoints)
+    ax.plot(xs, ys, zs, color='b', marker='o')
+    ax.plot([start[0]], [start[1]], [start[2]], color='green', marker='o')
+    ax.text(start[0], start[1], start[2], "START", color='green')
+    ax.plot([goal[0]], [goal[1]], [goal[2]], color='red', marker='o')
+    ax.text(goal[0], goal[1], goal[2], "GOAL", color='red')
+    plt.savefig('waypoints.png')
+    plt.show()

@@ -37,7 +37,7 @@ class Environment:
         }
         self.objects.append(obj)
 
-    def plot_environment(self):
+    def get_plot(self):
         """Plots the 3D map with all the objects."""
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
@@ -58,7 +58,7 @@ class Environment:
             self._plot_cube(ax, x, y, z, dx, dy, dz)
 
         plt.savefig('world.png')
-        plt.show()
+        return ax
 
     def _plot_cube(self, ax, x, y, z, dx, dy, dz):
             """
