@@ -69,7 +69,7 @@ def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
     return False
 
 if __name__ == "__main__":
-    world_filepath = "worlds/test_simple.json"
+    world_filepath = "worlds/forest.json"
     with open(world_filepath, 'r') as file:
         world = json.load(file)
 
