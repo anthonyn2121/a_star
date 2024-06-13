@@ -1,3 +1,4 @@
+import json
 from heapq import heapify, heappop, heappush
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,7 +23,7 @@ def get_neighbors(pos, resolution):
 
 def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
     '''
-        Algorithm followed from http://robotics.caltech.edu/wiki/images/e/e0/Astar.pdf
+        Algorithm followed from UPenn MEAM 620 class
     '''
     occ = OccupancyMap(world, resolution=resolution)
 
@@ -68,18 +69,18 @@ def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
     return False
 
 if __name__ == "__main__":
-    world = {'bounds': (0, 10, 0, 10, 0, 10),
-            'blocks': [{'position':(1, 1, 1), 'size': (2, 2, 2)},
-                       {'position':(5, 5, 0), 'size': (3, 3, 3)},
-                       {'position':(7, 2, 4), 'size': (1, 4, 1)}]
-            }
+    world_filepath = "worlds/test_simple.json"
+    with open(world_filepath, 'r') as file:
+        world = json.load(file)
 
-    env = Environment(world)
+    world_data = {key:world[key] for key in ["bounds", "blocks"]}
+    env = Environment(world_data)
+    start = tuple(world['start'])
+    goal = tuple(world['goal'])
+    margin = world['margin']
+    resolution = world['resolution']
 
-    start = (4, 2, 0)
-    goal = (9, 8, 8)
-
-    waypoints = graph_search(env, start, goal, margin=0.5, resolution=0.5)
+    waypoints = graph_search(env, start, goal, margin, resolution)
 
     ax = env.get_plot()
     
