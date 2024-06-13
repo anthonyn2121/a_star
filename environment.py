@@ -92,7 +92,7 @@ class Environment:
             ]
 
             # Create a Poly3DCollection object for the cube
-            poly3d = Poly3DCollection(faces, facecolors=color, linewidths=1, edgecolors='r')
+            poly3d = Poly3DCollection(faces, facecolors=color, linewidths=1, edgecolors='k')
             ax.add_collection3d(poly3d)
 
 
