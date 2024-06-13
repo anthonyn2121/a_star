@@ -38,12 +38,13 @@ def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
     assert(not occ.is_occupied_position(start))
     assert(not occ.is_occupied_position(goal))
     
+    heuristic = lambda a, b: np.linalg.norm(np.asarray(a) - np.asarray(b))
+
     graph = [(i, j, k) for i in range(x_min, x_max+1) for j in range(y_min, y_max+1) for k in range(z_min, z_max+1)]
     
-    parent = {start: None}
+    parent = {}
     g_scores = {start: 0}
-    h_scores = {start: h(start, goal)}
-    f_scores = {start: (g_scores[start] + h_scores[start])}
+    f_scores = {start: heuristic(start, goal)}
 
     open = [(f_scores[start], start)]
     heapify(open)
@@ -58,30 +59,20 @@ def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
             while curr in parent:
                 waypoints.append(curr)
                 curr = parent[curr]
-                print('curr: ', curr)
             return waypoints[::-1]  ## put in correct order
-        else:
-            neighbors = get_neighbors(curr, resolution)
-            for node in neighbors:
-                if (not occ.is_valid_position(node)) or (occ.is_occupied_position(node)):
-                    continue
 
+        neighbors = get_neighbors(curr, resolution)
+        for node in neighbors:
+            if (not occ.is_valid_position(node)) or (occ.is_occupied_position(node)):
+                continue
+
+            g_score = g_scores[curr] + resolution
+            if node not in g_scores or (g_score < g_scores.get(node, 0)):
                 parent[node] = curr
-                g_scores[node] = g(node, start)
-                h_scores[node] = h(node, goal)
-                f = g_scores[node] + h_scores[node]
-                f_scores[node] = f
-
-                if (node in closed) and (f <= f_scores.get(node, 0)):
-                    closed.remove(node)
-                    continue
-                if (node in open) and (f <= f_scores.get(node, 0)):
-                    open.remove(node)
-                    heapify(open)
-                    continue
-
+                g_scores[node] = g_score
+                f_scores[node] = g_score + heuristic(node, goal)
                 heappush(open, (f_scores[node], node))
-                # print(f"Pushed node: {node}\n parent[{node}]={parent[node]}\n f[{node}]={f_scores[node]}")
+            # print(f"Pushed node: {node}\n parent[{node}]={parent[node]}\n f[{node}]={f_scores[node]}")
 
     return False
 
@@ -97,5 +88,5 @@ if __name__ == "__main__":
     start = (4, 2, 0)
     goal = (8, 2, 0)
 
-    waypoints = graph_search(env, start, goal, margin=0.5)
+    waypoints = graph_search(env, start, goal, margin=1.0)
     print(waypoints)
