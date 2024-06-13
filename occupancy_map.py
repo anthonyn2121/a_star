@@ -15,7 +15,6 @@ class OccupancyMap:
         z_dim = int(np.ceil((z_max - z_min) / self.resolution))
 
         occupancy_map = np.zeros((x_dim, y_dim, z_dim))
-
         for obj in self.world.objects:
             x, y, z = obj['position']
             dx, dy, dz = obj['size']
@@ -41,19 +40,22 @@ class OccupancyMap:
 
     def is_valid_index(self, index):
         for i in range(3):
-            if (index[i] > self.map.shape[i]) or i < 0:
+            if (index[i] > self.grid.shape[i]) or i < 0:
                 return False
         return True
     
     def is_valid_position(self, position):
         bounds = self.world.map_bounds
         for i in range(3):
-            if (position[i] <= bounds[i*2]) or (position[i] >= bounds[i*2+1]):
+            if i == 2:
+                if (position[i] < bounds[i*2]) or (position[i] >= bounds[i*2+1]):  ## allow z-axis to be on the ground but not on the ceil of map
+                    return False
+            elif (position[i] <= bounds[i*2]) or (position[i] >= bounds[i*2+1]):  ## do not allow to be on map boundaries
                 return False
         return True
 
     def is_occupied_index(self, index):
-        if self.map[tuple(index)] == 1:
+        if self.grid[tuple(index)] == 1:
             return True
         return False
     

@@ -44,6 +44,9 @@ class Environment:
 
         # Set map bounds
         x_min, x_max, y_min, y_max, z_min, z_max = self.map_bounds
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        ax.set_zlabel('z')
         ax.set_xlim(x_min, x_max)
         ax.set_ylim(y_min, y_max)
         ax.set_zlim(z_min, z_max)
