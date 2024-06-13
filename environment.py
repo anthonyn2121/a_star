@@ -57,7 +57,7 @@ class Environment:
             dx, dy, dz = obj['size']
             self._plot_cube(ax, x, y, z, dx, dy, dz)
 
-        plt.savefig('world.png')
+        plt.savefig('map.png')
         return ax
 
     def _plot_cube(self, ax, x, y, z, dx, dy, dz):

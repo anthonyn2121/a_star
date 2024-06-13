@@ -69,7 +69,14 @@ def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
     return False
 
 if __name__ == "__main__":
-    world_filepath = "worlds/window.json"
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--file', '-f', default="test_simple.json", help="json file in worlds/ directory that describes an environment")
+    args = parser.parse_args()
+
+
+    world_filepath = 'worlds/' + args.file
     with open(world_filepath, 'r') as file:
         world = json.load(file)
 
