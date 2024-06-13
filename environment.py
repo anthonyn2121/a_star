@@ -3,15 +3,24 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 class Environment:
-    def __init__(self, map_bounds):
+    def __init__(self, world_data):
         """
         Initializes the environment with given bounds.
 
         Parameters:
-        map_bounds (tuple): (x_min, x_max, y_min, y_max, z_min, z_max)
+        
+        world_data (dict): dict containing keys 'bounds' and 'blocks'
+            bounds (tuple): (x_min, x_max, y_min, y_max, z_min, z_max)
+            blocks (dict): dict containing keys 'position' and 'size'
+                position (tuple): (x, y, z) position center of cuboid 
+                size (tuple): (dx, dy, dz) size of object
         """
-        self.map_bounds = map_bounds
-        self.objects = []
+        assert ('bounds' in world_data)
+        self.map_bounds = world_data['bounds']
+        if 'blocks' in world_data.keys():
+            self.objects = [block for block in world_data['blocks']]
+        else:
+            self.objects = []
 
     def add_object(self, position, size):
         """
@@ -89,9 +98,12 @@ class Environment:
 
 if __name__ == "__main__":
     # Example usage
-    env = Environment(map_bounds=(0, 10, 0, 10, 0, 10))
-    env.add_object((1, 1, 1), (2, 2, 2))
-    env.add_object((5, 5, 0), (3, 3, 3))
-    env.add_object((7, 2, 4), (1, 4, 1))
+    world = {'bounds': (0, 10, 0, 10, 0, 10),
+             'blocks': [{'position':(1, 1, 1), 'size': (2, 2, 2)},
+                        {'position':(5, 5, 0), 'size': (3, 3, 3)},
+                        {'position':(7, 2, 4), 'size': (1, 4, 1)}]
+            }
+
+    env = Environment(world)
 
     env.plot_environment()
