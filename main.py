@@ -4,11 +4,8 @@ import numpy as np
 from environment import Environment
 from occupancy_map import OccupancyMap
 
-## lambda functions because I'm lazy -- and yes, they are the same
-## Used 2 for clarification on what my cost functions are
-## TODO: Make cost functions configurable?
-h = lambda x, goal: np.linalg.norm(np.asarray(x) - np.asarray(goal))
-g = lambda x, start: np.linalg.norm(np.asarray(x) - np.asarray(start))
+## lambda function because I'm lazy
+heuristic = lambda a, b: np.linalg.norm(np.asarray(a) - np.asarray(b))
 
 def get_neighbors(pos, resolution):
     x , y, z = pos
@@ -23,25 +20,19 @@ def get_neighbors(pos, resolution):
 
     return neighbors
 
-# def get_path(parent_dict, start, goal):
-#     path = []
-
 def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
     '''
         Algorithm followed from http://robotics.caltech.edu/wiki/images/e/e0/Astar.pdf
     '''
-    x_min, x_max, y_min, y_max, z_min, z_max = world.map_bounds
     occ = OccupancyMap(world, resolution=resolution)
-    # assert(occ.is_valid_position(start) and occ.is_valid_position(goal))
+
+    ## individual asserts for easy debug
     assert(occ.is_valid_position(start))
     assert(occ.is_valid_position(goal))
-    # assert(not occ.is_occupied_position(start) and not occ.is_occupied_position(goal))
     assert(not occ.is_occupied_position(start))
     assert(not occ.is_occupied_position(goal))
     
     heuristic = lambda a, b: np.linalg.norm(np.asarray(a) - np.asarray(b))
-
-    graph = [(i, j, k) for i in range(x_min, x_max+1) for j in range(y_min, y_max+1) for k in range(z_min, z_max+1)]
     
     parent = {}
     g_scores = {start: 0}
@@ -60,7 +51,7 @@ def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
             while curr in parent:
                 waypoints.append(curr)
                 curr = parent[curr]
-            return waypoints[::-1]  ## put in correct order
+            return waypoints[::-1]  ## put in order from start to goal
 
         neighbors = get_neighbors(curr, resolution)
         for node in neighbors:
@@ -73,7 +64,6 @@ def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
                 g_scores[node] = g_score
                 f_scores[node] = g_score + heuristic(node, goal)
                 heappush(open, (f_scores[node], node))
-            # print(f"Pushed node: {node}\n parent[{node}]={parent[node]}\n f[{node}]={f_scores[node]}")
 
     return False
 
