@@ -110,4 +110,5 @@ if __name__ == "__main__":
 
     env = Environment(world)
 
-    env.plot_environment()
+    ax = env.get_plot()
+    plt.show(block=True)

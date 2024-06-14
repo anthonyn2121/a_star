@@ -99,4 +99,4 @@ if __name__ == "__main__":
     ax.plot([goal[0]], [goal[1]], [goal[2]], color='red', marker='o')
     ax.text(goal[0], goal[1], goal[2], "GOAL", color='red')
     plt.savefig('waypoints.png')
-    plt.show()
+    plt.show(block=True)
