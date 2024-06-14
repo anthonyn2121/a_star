@@ -2,6 +2,8 @@
 
 Finds path from start to goal using a L2 norm as heuristic.
 
+Will save 2 images: map.png which shows the environment, and then waypoints.png which plots the waypoints onto the environment
+
 Able to create your own world as a json package. Json must contain key words:
  - bounds
  - blocks
