@@ -14,10 +14,12 @@ Able to create your own world as a json package. Json must contain key words:
 
 Usage:
 ```
-python3 main.py -f <filename>
+git clone git@github.com:anthonyn2121/a_star.git
+git submodule update --init --recursive
+python3 a_star.py 0f <json_file>
 ```
 Example:
 ```
-python3 main.py -f forest.json
+python3 a_star.py -f environment_toolkit/worlds/forest.json
 ```
 Note that the filename must exist within the `worlds` directory
