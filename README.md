@@ -16,7 +16,7 @@ Usage:
 ```
 git clone git@github.com:anthonyn2121/a_star.git
 git submodule update --init --recursive
-python3 a_star.py 0f <json_file>
+python3 a_star.py -f <json_file>
 ```
 Example:
 ```
