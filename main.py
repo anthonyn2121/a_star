@@ -1,3 +1,5 @@
+import setup
+
 import json
 from heapq import heapify, heappop, heappush
 import matplotlib.pyplot as plt
