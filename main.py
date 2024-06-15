@@ -2,8 +2,8 @@ import json
 from heapq import heapify, heappop, heappush
 import matplotlib.pyplot as plt
 import numpy as np
-from environment import Environment
-from occupancy_map import OccupancyMap
+from environment_toolkit.environment import Environment
+from environment_toolkit.occupancy_map import OccupancyMap
 
 ## lambda function because I'm lazy
 heuristic = lambda a, b: np.linalg.norm(np.asarray(a) - np.asarray(b))
@@ -72,11 +72,11 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file', '-f', default="test_simple.json", help="json file in worlds/ directory that describes an environment")
+    parser.add_argument('--file', '-f', default="environment_toolkit/worlds/test_simple.json", help="json file that describes an environment")
     args = parser.parse_args()
 
 
-    world_filepath = 'worlds/' + args.file
+    world_filepath = args.file
     with open(world_filepath, 'r') as file:
         world = json.load(file)
 
