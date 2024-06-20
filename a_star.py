@@ -70,6 +70,69 @@ def graph_search(world, start, goal, resolution = 1.0, margin=5.0):
 
     return False
 
+def generate_circular_waypoints(radius, num_points=8, center=(0, 0, 0), normal_vector=(0, 0, 1)):
+    # Convert inputs to numpy arrays
+    center = np.array(center)
+    normal_vector = np.array(normal_vector)
+    
+    # Normalize the normal vector
+    normal_vector = normal_vector / np.linalg.norm(normal_vector)
+    
+    # Create an arbitrary vector perpendicular to the normal vector
+    if np.allclose(normal_vector, [1, 0, 0]):
+        perpendicular = np.cross(normal_vector, [0, 1, 0])
+    else:
+        perpendicular = np.cross(normal_vector, [1, 0, 0])
+    perpendicular = perpendicular / np.linalg.norm(perpendicular)
+    
+    # Create another perpendicular vector to form an orthonormal basis
+    perpendicular2 = np.cross(normal_vector, perpendicular)
+    
+    # Generate points
+    theta = np.linspace(0, 2*np.pi, num_points)
+    x = radius * np.cos(theta)
+    y = radius * np.sin(theta)
+    
+    # Transform points to 3D space
+    points = x[:, np.newaxis] * perpendicular + y[:, np.newaxis] * perpendicular2
+    
+    # Translate points to the specified center
+    points += center
+    
+    return points
+
+def generate_helical_waypoints(radius, num_points, num_turns, height, center=(0, 0, 0), axis=(0, 0, 1)):
+    # Convert inputs to numpy arrays
+    center = np.array(center)
+    axis = np.array(axis)
+    
+    # Normalize the axis vector
+    axis = axis / np.linalg.norm(axis)
+    
+    # Create an arbitrary vector perpendicular to the axis
+    if np.allclose(axis, [1, 0, 0]):
+        perpendicular = np.cross(axis, [0, 1, 0])
+    else:
+        perpendicular = np.cross(axis, [1, 0, 0])
+    perpendicular = perpendicular / np.linalg.norm(perpendicular)
+    
+    # Create another perpendicular vector to form an orthonormal basis
+    perpendicular2 = np.cross(axis, perpendicular)
+    
+    # Generate points
+    theta = np.linspace(0, 2*np.pi*num_turns, num_points)
+    x = radius * np.cos(theta)
+    y = radius * np.sin(theta)
+    z = np.linspace(0, height, num_points)
+    
+    # Transform points to 3D space
+    points = x[:, np.newaxis] * perpendicular + y[:, np.newaxis] * perpendicular2 + z[:, np.newaxis] * axis
+    
+    # Translate points to the specified center
+    points += center
+    
+    return points
+
 if __name__ == "__main__":
     import argparse
 
